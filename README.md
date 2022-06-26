@@ -7,3 +7,6 @@ to build secure REST APIs using JWT authentication , has proper exception handli
 For building and running the application you need:
 - JDK 1.8
 - Maven 3
+
+# Help
+Please fork and PR to improve the project.
