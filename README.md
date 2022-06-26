@@ -8,7 +8,7 @@ For building and running the application you need:
 - JDK 1.8
 - Maven 3
 
-## ApiResponse
+## ApiResponse.java
 
 ```java
 @Builder
@@ -21,6 +21,20 @@ public class ApiResponse<E> implements Serializable {
   private List<Error> errors;
 }
 
+```
+
+## Error.java
+```java
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
+@ToString
+public class Error {
+  private String statusCode;
+  private String status;
+  private String message;
+}
 ```
 
 
