@@ -1,6 +1,7 @@
 package com.jwt.demo.controller;
 
 import com.jwt.demo.constants.API;
+import com.jwt.demo.constants.Status;
 import com.jwt.demo.payload.ApiResponse;
 import com.jwt.demo.payload.Error;
 import com.jwt.demo.payload.UserRequestDto;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class UserController {
 
   @PostMapping("users")
   public ResponseEntity<ApiResponse<UserResponseDto>> createUser(
-      @RequestBody UserRequestDto userRequestDto) {
+     @Valid @RequestBody UserRequestDto userRequestDto) {
 
     try {
       UserResponseDto userResponseDto = this.userService.createUser(userRequestDto);
@@ -38,7 +40,7 @@ public class UserController {
                   Arrays.asList(
                       Error.builder()
                           .message("Something Went Wrong")
-                          .status("INTERNAL SERVER ERROR")
+                          .status(Status.INTERNAL_SERVER_ERROR)
                           .statusCode(API.INTERNAL_SEVER_ERROR)
                           .build()))
               .build();
