@@ -9,11 +9,14 @@ public interface PostService {
 
   PostResponseDto createPost(PostRequestDto postRequestDto , Integer categoryId , Integer userId);
 
+  List<PostResponseDto> getPostsByCategory(Integer categoryId);
+  List<PostResponseDto> getPostsByUser(Integer userId);
+
   PostResponseDto updatePost(PostRequestDto postRequestDto);
 
   PostResponseDto getPostById(Integer id);
 
   void deletePost(Integer id);
 
-  List<PostResponseDto> getAllPosts();
+
 }

@@ -4,7 +4,6 @@ import com.jwt.demo.entities.Category;
 import com.jwt.demo.entities.Post;
 import com.jwt.demo.entities.User;
 import com.jwt.demo.exception.ResourceNotFoundException;
-import com.jwt.demo.mapper.PostMapper;
 import com.jwt.demo.payload.PostRequestDto;
 import com.jwt.demo.payload.PostResponseDto;
 import com.jwt.demo.repository.CategoryRepository;
@@ -12,6 +11,7 @@ import com.jwt.demo.repository.PostRepository;
 import com.jwt.demo.repository.UserRepository;
 import com.jwt.demo.service.PostService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
   @Autowired private PostRepository postRepository;
-  @Autowired private PostMapper postMapper;
+  @Autowired private ModelMapper modelMapper;
 
   @Autowired private CategoryRepository categoryRepository;
   @Autowired private UserRepository userRepository;
@@ -44,13 +44,41 @@ public class PostServiceImpl implements PostService {
             .findById(categoryId)
             .orElseThrow(() -> new ResourceNotFoundException("Category", categoryId));
 
-    Post post = this.postMapper.dtoToModel(postRequestDto);
+    Post post = this.modelMapper.map(postRequestDto, Post.class);
     post.setCategory(category);
     post.setUser(user);
     post.setAddedDate(new Date());
     post.setImage("default.png");
     this.postRepository.save(post);
-    return this.postMapper.modelToDto(post);
+    return this.modelMapper.map(post, PostResponseDto.class);
+  }
+
+  @Override
+  public List<PostResponseDto> getPostsByCategory(Integer categoryId) {
+    Category category =
+        this.categoryRepository
+            .findById(categoryId)
+            .orElseThrow(() -> new ResourceNotFoundException("Category", categoryId));
+    List<Post> posts = this.postRepository.findByCategory(category);
+    List<PostResponseDto> postResponseDtos =
+        posts.stream()
+            .map((post -> this.modelMapper.map(post, PostResponseDto.class)))
+            .collect(Collectors.toList());
+    return postResponseDtos;
+  }
+
+  @Override
+  public List<PostResponseDto> getPostsByUser(Integer userId) {
+    User user =
+        this.userRepository
+            .findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+    List<Post> posts = this.postRepository.findByUser(user);
+    List<PostResponseDto> postResponseDtos =
+        posts.stream()
+            .map((post -> this.modelMapper.map(post, PostResponseDto.class)))
+            .collect(Collectors.toList());
+    return postResponseDtos;
   }
 
   @Override
@@ -64,7 +92,7 @@ public class PostServiceImpl implements PostService {
         this.postRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Post", id));
-    return this.postMapper.modelToDto(post);
+    return this.modelMapper.map(post, PostResponseDto.class);
   }
 
   @Override
@@ -74,13 +102,5 @@ public class PostServiceImpl implements PostService {
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Post", id));
     this.postRepository.delete(post);
-  }
-
-  @Override
-  public List<PostResponseDto> getAllPosts() {
-    List<Post> posts = this.postRepository.findAll();
-    List<PostResponseDto> postResponseDtos =
-        posts.stream().map((post -> this.postMapper.modelToDto(post))).collect(Collectors.toList());
-    return postResponseDtos;
   }
 }
