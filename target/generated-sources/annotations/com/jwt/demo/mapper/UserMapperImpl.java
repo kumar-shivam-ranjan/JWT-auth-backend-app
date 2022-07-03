@@ -1,17 +1,15 @@
 package com.jwt.demo.mapper;
 
 import com.jwt.demo.entities.User;
-import com.jwt.demo.entities.User.UserBuilder;
 import com.jwt.demo.payload.UserRequestDto;
 import com.jwt.demo.payload.UserResponseDto;
-import com.jwt.demo.payload.UserResponseDto.UserResponseDtoBuilder;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-07-02T20:58:49+0530",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
+    date = "2022-07-03T13:58:31+0530",
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 18.0.1.1 (Oracle Corporation)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -22,13 +20,13 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        UserResponseDtoBuilder userResponseDto = UserResponseDto.builder();
+        UserResponseDto userResponseDto = new UserResponseDto();
 
-        userResponseDto.id( user.getId() );
-        userResponseDto.name( user.getName() );
-        userResponseDto.email( user.getEmail() );
+        userResponseDto.setId( user.getId() );
+        userResponseDto.setName( user.getName() );
+        userResponseDto.setEmail( user.getEmail() );
 
-        return userResponseDto.build();
+        return userResponseDto;
     }
 
     @Override
@@ -37,13 +35,13 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        UserBuilder user = User.builder();
+        User user = new User();
 
-        user.name( userRequestDto.getName() );
-        user.email( userRequestDto.getEmail() );
-        user.password( userRequestDto.getPassword() );
-        user.about( userRequestDto.getAbout() );
+        user.setName( userRequestDto.getName() );
+        user.setEmail( userRequestDto.getEmail() );
+        user.setPassword( userRequestDto.getPassword() );
+        user.setAbout( userRequestDto.getAbout() );
 
-        return user.build();
+        return user;
     }
 }
