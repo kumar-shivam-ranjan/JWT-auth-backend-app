@@ -1,11 +1,12 @@
 package com.jwt.demo.controller;
 
-import com.jwt.demo.mapper.CategoryMapper;
+
 import com.jwt.demo.payload.ApiResponse;
 import com.jwt.demo.payload.CategoryRequestDto;
 import com.jwt.demo.payload.CategoryResponseDto;
 import com.jwt.demo.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import java.util.List;
 public class CategoryController {
 
   @Autowired private CategoryService categoryService;
-  @Autowired private CategoryMapper categoryMapper;
+
 
   @GetMapping("categories")
   public ResponseEntity<ApiResponse<List<CategoryResponseDto>>> getAllCategories() {

@@ -18,4 +18,6 @@ public class PostResponseDto {
   private String title;
   private String content;
   private Date addedDate;
+  private CategoryResponseDto category;
+  private UserResponseDto user;
 }

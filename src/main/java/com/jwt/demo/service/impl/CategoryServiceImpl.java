@@ -2,11 +2,12 @@ package com.jwt.demo.service.impl;
 
 import com.jwt.demo.entities.Category;
 import com.jwt.demo.exception.ResourceNotFoundException;
-import com.jwt.demo.mapper.CategoryMapper;
+
 import com.jwt.demo.payload.CategoryRequestDto;
 import com.jwt.demo.payload.CategoryResponseDto;
 import com.jwt.demo.repository.CategoryRepository;
 import com.jwt.demo.service.CategoryService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,12 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Autowired private CategoryRepository categoryRepository;
   @Autowired
-  private CategoryMapper categoryMapper;
+  private ModelMapper modelMapper;
 
   @Override
   public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
-    Category category = this.categoryRepository.save(categoryMapper.dtoToModel(categoryRequestDto));
-    return categoryMapper.modelToResponseDto(category);
+    Category category = this.categoryRepository.save(this.modelMapper.map(categoryRequestDto, Category.class));
+    return modelMapper.map(category, CategoryResponseDto.class);
   }
 
   @Override
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
     category.setCategoryDescription(categoryRequestDto.getCategoryDescription());
     category.setCategoryTitle(categoryRequestDto.getCategoryTitle());
     this.categoryRepository.save(category);
-    return this.categoryMapper.modelToResponseDto(category);
+    return this.modelMapper.map(category, CategoryResponseDto.class);
   }
 
   @Override
@@ -53,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Category", id));
-    return this.categoryMapper.modelToResponseDto(category);
+    return this.modelMapper.map(category , CategoryResponseDto.class);
   }
 
   @Override
@@ -61,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
     List<Category> categories = this.categoryRepository.findAll();
     List<CategoryResponseDto> categoryResponseDtos =
         categories.stream()
-            .map((category -> categoryMapper.modelToResponseDto(category)))
+            .map((category -> this.modelMapper.map(category, CategoryResponseDto.class)))
             .collect(Collectors.toList());
     return categoryResponseDtos;
   }
