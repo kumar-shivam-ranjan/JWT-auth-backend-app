@@ -1,7 +1,5 @@
 package com.jwt.demo.payload;
 
-import com.jwt.demo.entities.Category;
-import com.jwt.demo.entities.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

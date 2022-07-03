@@ -12,7 +12,8 @@ public interface PostService {
   List<PostResponseDto> getPostsByCategory(Integer categoryId);
   List<PostResponseDto> getPostsByUser(Integer userId);
 
-  PostResponseDto updatePost(PostRequestDto postRequestDto);
+  List<PostResponseDto> getAllPosts();
+  PostResponseDto updatePost(PostRequestDto postRequestDto , Integer id);
 
   PostResponseDto getPostById(Integer id);
 
