@@ -1,16 +1,16 @@
 package com.jwt.demo.payload;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class PostResponseDto {
   private Integer postId;
   private String title;
@@ -18,4 +18,5 @@ public class PostResponseDto {
   private Date addedDate;
   private CategoryResponseDto category;
   private UserResponseDto user;
+  private Set<CommentResponseDto> comments=new HashSet<>();
 }

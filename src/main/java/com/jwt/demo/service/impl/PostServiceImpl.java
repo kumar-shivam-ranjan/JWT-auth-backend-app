@@ -126,6 +126,7 @@ public class PostServiceImpl implements PostService {
         this.postRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Post", id));
+    log.info("Post: {}", post);
     return this.modelMapper.map(post, PostResponseDto.class);
   }
 
