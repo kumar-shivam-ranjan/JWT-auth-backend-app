@@ -4,6 +4,7 @@ import com.jwt.demo.entities.Category;
 import com.jwt.demo.entities.Post;
 import com.jwt.demo.entities.User;
 import com.jwt.demo.exception.ResourceNotFoundException;
+import com.jwt.demo.payload.PaginatedResponse;
 import com.jwt.demo.payload.PostRequestDto;
 import com.jwt.demo.payload.PostResponseDto;
 import com.jwt.demo.repository.CategoryRepository;
@@ -13,6 +14,9 @@ import com.jwt.demo.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -82,13 +86,26 @@ public class PostServiceImpl implements PostService {
   }
 
   @Override
-  public List<PostResponseDto> getAllPosts() {
-    List<Post> posts = this.postRepository.findAll();
+  public PaginatedResponse<PostResponseDto> getAllPosts(Integer pageSize, Integer pageNumber) {
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    Page<Post> page = this.postRepository.findAll(pageable);
+    List<Post> posts = page.getContent();
     List<PostResponseDto> postResponseDtoList =
         posts.stream()
             .map((post -> this.modelMapper.map(post, PostResponseDto.class)))
             .collect(Collectors.toList());
-    return postResponseDtoList;
+
+    PaginatedResponse<PostResponseDto> paginatedResponse =
+        PaginatedResponse.<PostResponseDto>builder()
+            .isLast(page.isLast())
+            .isFirst(page.isFirst())
+            .pageNumber(page.getNumber())
+            .pageSize(page.getSize())
+            .content(postResponseDtoList)
+            .totalElements(page.getNumberOfElements())
+            .build();
+
+    return paginatedResponse;
   }
 
   @Override

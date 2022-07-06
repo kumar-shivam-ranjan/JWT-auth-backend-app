@@ -1,6 +1,7 @@
 package com.jwt.demo.controller;
 
 import com.jwt.demo.payload.ApiResponse;
+import com.jwt.demo.payload.PaginatedResponse;
 import com.jwt.demo.payload.PostRequestDto;
 import com.jwt.demo.payload.PostResponseDto;
 import com.jwt.demo.service.PostService;
@@ -11,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.jwt.demo.constants.Constants.DEFAULT_PAGE_NUMBER;
+import static com.jwt.demo.constants.Constants.DEFAULT_PAGE_SIZE;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -49,10 +53,14 @@ public class PostController {
   }
 
   @GetMapping("/posts")
-  public ResponseEntity<ApiResponse<List<PostResponseDto>>> getAllPosts() {
-    List<PostResponseDto> postResponseDtos = this.postService.getAllPosts();
-    ApiResponse<List<PostResponseDto>> apiResponse =
-        ApiResponse.<List<PostResponseDto>>builder().data(postResponseDtos).errors(null).build();
+  public ResponseEntity<ApiResponse<PaginatedResponse<PostResponseDto>>> getAllPosts(
+      @RequestParam(name = "page_size", defaultValue = DEFAULT_PAGE_SIZE, required = false)
+          Integer pageSize,
+      @RequestParam(name = "page_no", defaultValue = DEFAULT_PAGE_NUMBER, required = false)
+          Integer pageNumber) {
+    PaginatedResponse<PostResponseDto> posts = this.postService.getAllPosts(pageSize, pageNumber);
+    ApiResponse<PaginatedResponse<PostResponseDto>> apiResponse =
+        ApiResponse.<PaginatedResponse<PostResponseDto>>builder().data(posts).errors(null).build();
     return new ResponseEntity<>(apiResponse, HttpStatus.OK);
   }
 

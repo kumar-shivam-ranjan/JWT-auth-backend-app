@@ -1,5 +1,6 @@
 package com.jwt.demo.service;
 
+import com.jwt.demo.payload.PaginatedResponse;
 import com.jwt.demo.payload.PostRequestDto;
 import com.jwt.demo.payload.PostResponseDto;
 
@@ -12,7 +13,7 @@ public interface PostService {
   List<PostResponseDto> getPostsByCategory(Integer categoryId);
   List<PostResponseDto> getPostsByUser(Integer userId);
 
-  List<PostResponseDto> getAllPosts();
+  PaginatedResponse<PostResponseDto> getAllPosts(Integer pageSize, Integer pageNumber);
   PostResponseDto updatePost(PostRequestDto postRequestDto , Integer id);
 
   PostResponseDto getPostById(Integer id);
