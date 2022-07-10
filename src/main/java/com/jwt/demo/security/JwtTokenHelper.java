@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenHelper {
-  public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 60 * 60;
+  public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 60;
   private String secret = "jwtTokenKey";
 
   public String getUserNameFromToken(String token) {

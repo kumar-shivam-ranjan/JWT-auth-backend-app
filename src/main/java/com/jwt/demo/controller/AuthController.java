@@ -1,8 +1,8 @@
 package com.jwt.demo.controller;
 
-import com.jwt.demo.payload.JwtAuthRequest;
-import com.jwt.demo.payload.JwtAuthResponse;
+import com.jwt.demo.payload.*;
 import com.jwt.demo.security.JwtTokenHelper;
+import com.jwt.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +26,8 @@ public class AuthController {
 
   @Autowired private AuthenticationManager authenticationManager;
 
+  @Autowired private UserService userService;
+
   @PostMapping("/login")
   public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest jwtAuthRequest) {
     this.authenticate(jwtAuthRequest.getUsername(), jwtAuthRequest.getPassword());
@@ -40,10 +42,19 @@ public class AuthController {
     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
         new UsernamePasswordAuthenticationToken(username, password);
 
-    try{
+    try {
       this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-    }catch (Exception e){
+    } catch (Exception e) {
       throw new BadCredentialsException("Username or password is incorrect");
     }
+  }
+
+  @PostMapping("/register")
+  public ResponseEntity<ApiResponse<UserResponseDto>> registerUser(
+      @RequestBody UserRequestDto userRequestDto) {
+    UserResponseDto userResponseDto = userService.registerNewUser(userRequestDto);
+    ApiResponse<UserResponseDto> apiResponse =
+        ApiResponse.<UserResponseDto>builder().data(userResponseDto).errors(null).build();
+    return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
   }
 }

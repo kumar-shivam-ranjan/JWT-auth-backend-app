@@ -11,6 +11,8 @@ public interface UserService {
 
   UserResponseDto createUser(UserRequestDto userRequestDto);
 
+  UserResponseDto registerNewUser(UserRequestDto userRequestDto);
+
   UserResponseDto updateUser(UserRequestDto userRequestDto, Integer id);
 
   UserResponseDto getById(Integer id);
